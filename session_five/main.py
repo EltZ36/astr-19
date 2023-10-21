@@ -1,7 +1,10 @@
 import numpy as np 
+from astropy.table import Table 
+from astropy.io import ascii 
+from astropy.io import fits
 
-#generate table from text
-def sin_table():
+#generate table from text using numpy
+def np_sin_table():
     #writes out text 
     x = np.linspace(0, 2* np.pi, 1000)
     sin_x = np.sin(x)
@@ -9,16 +12,20 @@ def sin_table():
     np.savetxt("sin.txt", np.transpose((x,sin_x)), fmt = '%4.3f %4.3f')
     return 
 
-#print out the text 
-def print_table():
-    fname = "sin.txt"
-    test_data = np.genfromtxt(fname)
-    print(test_data)
+def astro_sin_table():
+    x = np.linspace(0, 2* np.pi, 1000)
+    sin_x = np.sin(x)
+    data = Table([x,sin_x],names=['x','sin(x)'])
+    ascii.write(data, 'table.txt', format='commented_header')
+    data_in = ascii.read('table.txt')
+    print(data_in)
+    return 
+
 
 #main function for it 
 def main():
-    sin_table()
-    print_table() 
+    np_sin_table()
+    astro_sin_table()
 
 if __name__ == "__main__":
     main() 
